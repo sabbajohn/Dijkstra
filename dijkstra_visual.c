@@ -168,7 +168,7 @@ void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices, int src, i
         }
     }
 
-    printf("Caminho mais curto de %d para %d: ", src, dest);
+    printf("The shortest path from %d to %d is: ", src, dest);
     printShortestPath(parent, dest, vertices, renderer);
     printf("\n");
 }

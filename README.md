@@ -3,7 +3,7 @@ Recently, I have been inspired to study and implement various fundamental algori
 
 ## **Compilation**
     $ gcc -o dijkstra_visual dijkstra_visual.c -lSDL2 -lSDL2_ttf
-
+![](image.png)
 ## **License**
  This implementation of Dijkstra's Algorithm is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
