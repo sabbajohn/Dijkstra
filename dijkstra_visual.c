@@ -44,13 +44,17 @@ int minDistance(Vertex *vertices, int numVertices) {
 }
 
 // Function to print the shortest path from source to destination
-void printShortestPath(int *parent, int dest) {
+void printShortestPath(int *parent, int dest, Vertex *vertices, SDL_Renderer* renderer) {
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Shortest path color
     if (parent[dest] == -1) {
         printf("%d ", dest);
         return;
     }
     
-    printShortestPath(parent, parent[dest]);
+    SDL_RenderDrawLine(renderer, vertices[dest].point.x, vertices[dest].point.y, vertices[parent[dest]].point.x, vertices[parent[dest]].point.y);
+    SDL_RenderPresent(renderer);
+    usleep(100000);
+    printShortestPath(parent, parent[dest],vertices, renderer);
     printf("%d ", dest);
 }
 
@@ -62,7 +66,7 @@ void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices, int src, i
     TTF_Font* font = TTF_OpenFont("Arial.ttf", 24);
     char str[20];
     
-    // Inicializa todos os vértices com distância máxima e não visitados
+    // Initialize all vertices with maximum distance and not visited
     for (int i = 0; i < numVertices; i++) {
         vertices[i].distance = INFINITY;
         vertices[i].visited = false;
@@ -90,22 +94,22 @@ void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices, int src, i
         SDL_RenderPresent(renderer);
     }
     
-    // A distância do vértice de origem para si mesmo é sempre 0
+    // Distance from source to itself is always 0
     vertices[src].distance = 0;
     
-    // Encontra o caminho mais curto para todos os vértices
+    // Find shortest path for all vertices
     for (int count = 0; count < numVertices - 1; count++) {
         int u = minDistance(vertices, numVertices);
         
         vertices[u].visited = true;
 
         if (u != dest && u != src){
-            SDL_SetRenderDrawColor(renderer, 255, 165, 0, 127); // Cor do vértice visitado
+            SDL_SetRenderDrawColor(renderer, 255, 165, 0, 127); // Color of visited vertex
             
         }else if(u == dest){
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 127); // Cor do vértice visitado
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 127); // Color of destination vertex
         }else if (u == src){
-            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 127); // Cor do vértice visitado
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 127); // Color of source vertex
         }
         SDL_Rect rect = {vertices[u].point.x, vertices[u].point.y, 10, 10};
         SDL_RenderFillRect(renderer, &rect);
@@ -115,21 +119,17 @@ void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices, int src, i
             if (!vertices[v].visited && graph[u][v] && vertices[u].distance + graph[u][v] < vertices[v].distance) {
                 vertices[v].distance = vertices[u].distance + graph[u][v];
                 parent[v] = u;
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 50);
+                SDL_RenderDrawLine(renderer, vertices[v].point.x, vertices[v].point.y, vertices[u].point.x, vertices[u].point.y);
             }
-            if ((vertices[v].visited && vertices[u].visited) || (v == src && u == dest)) {
-                        SDL_SetRenderDrawColor(renderer, 255, 165, 0, 50); // Cor da linha se ambos os vértices forem visitados
-                    } else {
-                        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 50); // Cor da linha se apenas um dos vértices for visitado
-                    }
-                    
-                    SDL_RenderDrawLine(renderer, vertices[v].point.x, vertices[v].point.y, vertices[u].point.x, vertices[u].point.y);
-                    SDL_RenderPresent(renderer);
-                    usleep(50000);
+            
+            SDL_RenderPresent(renderer);
+            usleep(500);
         }
     }
     
     printf("Caminho mais curto de %d para %d: ", src, dest);
-    printShortestPath(parent, dest);
+    printShortestPath(parent, dest, vertices, renderer);
     printf("\n");
 }
 
