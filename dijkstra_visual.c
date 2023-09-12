@@ -24,7 +24,7 @@ typedef struct{
 typedef struct {
     int distance;
     bool visited;
-    Point point
+    Point point;
 } Vertex;
 
 // Function to find the vertex with the minimum distance
@@ -65,6 +65,21 @@ void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices, int src, i
         vertices[i].point.x = rand() %500 + 50;
         vertices[i].point.y = rand() %500 + 50;
         parent[i] = -1;
+        
+        if (i == src){
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+
+        }else if (i == dest){
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        }else
+        {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        }
+        
+        SDL_Rect rect = {vertices[i].point.x, vertices[i].point.y, 10, 10};
+        SDL_RenderFillRect(renderer, &rect);
+        SDL_RenderPresent(renderer);
+        usleep(100000);
     }
     
     // A distância do vértice de origem para si mesmo é sempre 0
@@ -75,10 +90,14 @@ void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices, int src, i
         int u = minDistance(vertices, numVertices);
         
         vertices[u].visited = true;
-        
+        if (u != dest && u != src){
+            SDL_SetRenderDrawColor(renderer, 255, 165, 0, 255); // Cor do vértice visitado
+            SDL_Rect rect = {vertices[u].point.x, vertices[u].point.y, 10, 10};
+            SDL_RenderFillRect(renderer, &rect);
+            SDL_RenderPresent(renderer);
+        }
         // Renderiza o grafo atualizado
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
         
         for (int i = 0; i < numVertices; i++) {
             for (int j = 0; j < numVertices; j++) {
@@ -89,24 +108,11 @@ void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices, int src, i
                         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Cor da linha se apenas um dos vértices for visitado
                     }
                     
-                    SDL_RenderDrawLine(renderer, i * 10, j * 10, i * 10 + 10, j * 10 + 10);
+                    SDL_RenderDrawLine(renderer, vertices[i].point.x, vertices[i].point.y, vertices[j].point.x, vertices[j].point.y);
                 }
             }
         }
         
-        for (int i = 0; i < numVertices; i++) {
-            if (i == src)
-                SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Cor do vértice de origem
-            else if (i == dest)
-                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Cor do vértice de destino
-            else if (vertices[i].visited)
-                SDL_SetRenderDrawColor(renderer, 255, 165, 0, 255); // Cor do vértice visitado
-            else
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Cor do vértice não visitado
-
-            SDL_Rect rect = {i * 10, i * 10, 10, 10};
-            SDL_RenderFillRect(renderer, &rect);
-        }
         
         SDL_RenderPresent(renderer);
         usleep(100000);
