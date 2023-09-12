@@ -240,7 +240,11 @@ int main()
                 }
                 else
                 {
-                    graph[i][j] = rand() % 10; // Random weight between 0 and 9
+                    if (rand() % 10 < 9) { 
+                        graph[i][j] = 0;
+                    } else {
+                        graph[i][j] = rand() % 10;
+                    }
                 }
             }
         }
