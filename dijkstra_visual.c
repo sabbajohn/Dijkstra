@@ -79,7 +79,7 @@ void printShortestPath(int *parent, int dest, Vertex *vertices, SDL_Renderer *re
 
     SDL_RenderDrawLine(renderer, vertices[dest].point.x, vertices[dest].point.y, vertices[parent[dest]].point.x, vertices[parent[dest]].point.y);
     SDL_RenderPresent(renderer);
-    usleep(100000);
+    
     printShortestPath(parent, parent[dest], vertices, renderer);
     printf("%d ", dest);
 }
@@ -98,7 +98,7 @@ void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices, int src, i
     {
         vertices[i].distance = INFINITY;
         vertices[i].visited = false;
-        vertices[i].point.x = rand() % 1000 + 50;
+        vertices[i].point.x = rand() % 1100 + 50;
         vertices[i].point.y = rand() % 640 + 50;
         parent[i] = -1;
         SDL_Color textColor;
